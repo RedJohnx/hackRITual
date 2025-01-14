@@ -28,14 +28,8 @@
         >
           <button>Download</button>
         </a>
-        <!--Solve this equation to find the route to the next challenge:
-        333333x - 777777777777 = 111111 -->
 
-        <input
-          type="text"
-          id="equation-answer"
-          placeholder="Solve for X (Clue for later)"
-        />
+        <input type="text" id="equation-answer" placeholder="Solve for X " />
         <button id="solve-equation-btn">Submit</button>
       </div>
 
@@ -46,7 +40,7 @@
           <button>Download</button>
         </a>
       </div>
-      <div class="camera" id="camera-4">
+     <div>X <div class="camera" id="camera-4">
         <h2>Camera 4</h2>
         <img src="../static/images/cam4.jpg" alt="Camera 4 Feed" />
         <a href="../static/images/cam4.jpg" download="Camera4_Feed.jpg">
@@ -55,6 +49,15 @@
         <strong><br /><br />password/paraphrase : "CameraHacked"</strong>
       </div>
     </div>
+
+    <!-- Notification area next to Camera 4 -->
+    <div id="notification-area" class="notification-area">
+      <p id="notification-message"></p>
+      <button id="next-challenge-btn" class="next-btn" style="display: none;">
+        Next Challenge
+      </button>
+    </div></div>
+
     <script src="../static/scripts/security_cameras.js"></script>
   </body>
 </html>

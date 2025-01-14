@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Final Challenge</title>
+    <link rel="stylesheet" href="../static/styles/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Final Challenge</h1>
+
+      <!-- Puzzle 1: Riddle -->
+      <div class="challenge">
+        <h2>Puzzle 1: Solve the Riddle</h2>
+        <p>
+          "Im always moving, yet I never go anywhere. You can’t buy me, but you
+          can lose me. I’m not something you can catch. What am I"
+        </p>
+        <form id="puzzle1-form">
+          <input type="hidden" name="puzzle" value="puzzle1" />
+          <input type="text" name="answer" placeholder="Your answer" required />
+          <button type="submit">Submit</button>
+        </form>
+        <div id="puzzle1-result"></div>
+      </div>
+
+      <hr />
+
+      <!-- Puzzle 2: Binary Decoding -->
+      <div class="challenge">
+        <h2>Puzzle 2: Decode the Binary</h2>
+        <p>
+          "Decode the binary sequence below into a word and submit it as your
+          answer:
+          <code>01100010 01101001 01101110 01100001 01110010 01111001</code>"
+        </p>
+        <form id="puzzle2-form">
+          <input type="hidden" name="puzzle" value="puzzle2" />
+          <input type="text" name="answer" placeholder="Your answer" required />
+          <button type="submit">Submit</button>
+        </form>
+        <div id="puzzle2-result"></div>
+      </div>
+    </div>
+
+    <script>
+      // Form submission handlers
+      const handleFormSubmission = (formId, resultId) => {
+        const form = document.getElementById(formId);
+        const resultDiv = document.getElementById(resultId);
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData(form);
+          const response = await fetch("/admin-panel/final-challenge", {
+            method: "POST",
+            body: formData,
+          });
+          const data = await response.json();
+          resultDiv.textContent = data.message;
+        });
+      };
+
+      handleFormSubmission("puzzle1-form", "puzzle1-result");
+      handleFormSubmission("puzzle2-form", "puzzle2-result");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Professor's Communications</title>
+    <link rel="stylesheet" href="../static/styles/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>The Professor's Communications</h1>
+        <p>Your mission begins here! Solve the MD5 challenge to proceed.</p>
+        <form action="/md5_check" method="POST">
+            <label for="hash">Enter the MD5 hash of "hello":</label>
+            <input type="text" id="hash" name="hash" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <!-- Add this right before </body> in each HTML file -->
+<div class="overlay"></div>
+<script>
+  // Add success/error classes to result divs
+  document.querySelectorAll('[id$="-result"]').forEach(elem => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'characterData' || mutation.type === 'childList') {
+          const text = elem.textContent.toLowerCase();
+          elem.className = text.includes('correct') || text.includes('success') 
+            ? 'success' 
+            : text.includes('incorrect') || text.includes('error') 
+              ? 'error' 
+              : '';
+        }
+      });
+    });
+    
+    observer.observe(elem, {
+      characterData: true,
+      childList: true,
+      subtree: true
+    });
+  });
+
+  // Add hover effect to challenges
+  document.querySelectorAll('.challenge').forEach(challenge => {
+    challenge.addEventListener('mouseenter', () => {
+      const others = document.querySelectorAll('.challenge');
+      others.forEach(other => {
+        if (other !== challenge) {
+          other.style.opacity = '0.7';
+          other.style.transform = 'scale(0.98)';
+        }
+      });
+    });
+
+    challenge.addEventListener('mouseleave', () => {
+      document.querySelectorAll('.challenge').forEach(other => {
+        other.style.opacity = '1';
+        other.style.transform = 'translateY(0)';
+      });
+    });
+  });
+</script>
+</body>
+</html>

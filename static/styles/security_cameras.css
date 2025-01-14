@@ -1,136 +1,202 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #1c1c1c;
-  color: #f4f4f4;
-  text-align: center;
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap");
+
+:root {
+  --primary-red: #e50914;
+  --dark-bg: #0a0a0a;
+  --camera-bg: #141414;
+  --text-color: #00ff00;
+  --accent-gold: #ffd700;
+  --grid-gap: 20px;
+  --camera-border: #1a1a1a;
+}
+
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  font-family: "Share Tech Mono", monospace;
 }
 
-h1 {
-  margin: 20px 0;
-  font-size: 2rem;
-}
-
-#camera-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  padding: 20px;
-}
-
-.camera {
-  background: #2c2c2c;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.camera img {
-  max-width: 100%;
-  border-radius: 10px;
-}
-
-.camera h2 {
-  margin: 10px 0;
-}
 body {
-  font-family: Arial, sans-serif;
-  background-color: #0e1a29;
-  color: #ffffff;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background: var(--dark-bg);
+  color: var(--text-color);
   min-height: 100vh;
+  padding: 20px;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 95%, rgba(0, 255, 0, 0.1) 100%),
+    linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  pointer-events: none;
+  z-index: -1;
 }
 
 h1 {
-  margin: 20px;
+  text-align: center;
+  margin-bottom: 30px;
   font-size: 2.5rem;
-  color: #00d4ff;
+  color: var(--primary-red);
+  text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+  animation: titleScan 2s infinite linear;
 }
 
 #camera-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  width: 90%;
-  max-width: 1200px;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--grid-gap);
   padding: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 .camera {
-  background: linear-gradient(145deg, #1a2940, #243b55);
-  border: 2px solid #00d4ff;
+  background: var(--camera-bg);
+  border: 2px solid var(--camera-border);
   border-radius: 10px;
   padding: 15px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  transition: transform 0.3s ease;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .camera:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+  transform: scale(1.02);
 }
 
-.camera img {
-  max-width: 100%;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
-
-.camera button {
-  background-color: #00d4ff;
-  color: #16213e;
-  border: none;
-  padding: 10px 15px;
+.camera::before {
+  content: "LIVE";
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--primary-red);
+  color: white;
+  padding: 5px 10px;
   border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s;
-}
-
-.camera button:hover {
-  background-color: #009bb5;
+  font-size: 0.8rem;
+  animation: blink 2s infinite;
 }
 
 .camera h2 {
-  margin: 10px 0;
-  color: #00bcd4;
+  color: var(--text-color);
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  text-transform: uppercase;
 }
 
-footer {
-  margin-top: auto;
-  padding: 10px;
-  background: #16213e;
-  color: #00d4ff;
-  text-align: center;
+.camera img {
   width: 100%;
-}
-#equation-answer {
-  margin-top: 10px;
-  padding: 8px;
-  border: 1px solid #00d4ff;
+  height: 300px;
+  object-fit: cover;
   border-radius: 5px;
-  background: #1a2940;
-  color: #ffffff;
-  font-size: 1rem;
+  margin-bottom: 15px;
+  border: 1px solid var(--camera-border);
+  filter: brightness(0.9) contrast(1.1);
 }
 
-#solve-equation-btn {
-  margin-top: 10px;
-  padding: 10px 15px;
-  background: #00d4ff;
-  color: #0e1a29;
+.camera img:hover {
+  filter: brightness(1) contrast(1.2);
+}
+
+button {
+  background: linear-gradient(45deg, var(--primary-red), #ff1e1e);
+  color: white;
   border: none;
+  padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin: 5px;
 }
 
-#solve-equation-btn:hover {
-  background: #009bb5;
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--primary-red);
+  border-radius: 5px;
+  color: var(--text-color);
+  font-family: "Share Tech Mono", monospace;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+strong {
+  color: var(--accent-gold);
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes titleScan {
+  0% {
+    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5),
+      -100vw 0 2px rgba(0, 255, 0, 0.3);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5),
+      100vw 0 2px rgba(0, 255, 0, 0.3);
+  }
+}
+
+@media (max-width: 768px) {
+  #camera-grid {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .camera img {
+    height: 250px;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-red);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff1e1e;
 }

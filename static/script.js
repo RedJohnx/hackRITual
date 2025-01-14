@@ -5,16 +5,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const typewriterElement = document.getElementById("typewriter");
   const startHeistButton = document.getElementById("start-heist");
 
-  // Initialize GSAP ScrollTrigger
-  gsap.registerPlugin(ScrollTrigger);
-
   enterButton.addEventListener("click", () => {
     gsap.to(landing, {
       opacity: 0,
       duration: 1,
       onComplete: () => {
         landing.classList.add("hidden");
-        mainContent.classList.remove("hidden");
+        mainContent.style.display = "block"; // Show the main content
         revealMainContent();
       },
     });
@@ -22,18 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function revealMainContent() {
     const text = `Welcome to chapter MONEY HEIST<br><br>
-  
-  
-       You'll start with 8 challenges: 4 medium and 4 hard. At any moment, you could uncover the path to a new medium challenge—no rules, no order, just pure chaos. <br><br>
-  
-  
-       Each medium challenge holds a main flag... and a piece of a *secret password*. This password is your key to the heist: collect 4 fragments and you'll unlock the route to the first hard challenge. <br><br>
-  
-  
-       But that's not all. Every hard challenge you crack reveals another route, another piece of the puzzle, until you've breached the vault and claimed victory. <br><br>
-  
-  
-       Time is ticking. The codes are hidden. Are you ready to pull off the perfect heist?<br><br>`;
+          You'll start with 3 challenges: 2 medium and 1 hard. At any moment, you could uncover the path to a new medium challenge—no rules, no order, just pure chaos. <br><br>
+          Each medium challenge holds a main flag....  <br><br>
+          Each Challenge keeps getting stronger stage by stage. <br><br>
+          Time is ticking. The codes are hidden. Are you ready to pull off the perfect heist?<br><br>`;
 
     const words = text.split(" ");
     let i = 0;
@@ -53,6 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   startHeistButton.addEventListener("click", () => {
-    window.location.href = "secret_cameras";
+    window.location.href = "/secret-cameras";
   });
 });

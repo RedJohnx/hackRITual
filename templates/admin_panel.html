@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="../static/styles/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome to the Admin Panel</h1>
+      <p>Solve the challenges below to unlock the secrets of The Professor!</p>
+
+      <div class="challenge">
+        <h2>Challenge 1: Book Cipher Puzzle</h2>
+        <p>
+          Use the book at <a href="/book/1" target="_blank">Book.json</a>. Find
+          5 words by indexing into specific lines, and submit them
+          (space-separated). <br />
+          Code: (1,2),(2,10),(3,6),(4,3),(5,10)
+        </p>
+        <form id="book-cipher-form">
+          <input
+            type="text"
+            id="cipher-words"
+            name="cipher_words"
+            placeholder="Enter the 5 words"
+            required
+          />
+          <button type="submit">Submit</button>
+        </form>
+        <div id="book-cipher-result"></div>
+      </div>
+
+      <script>
+        document
+          .getElementById("book-cipher-form")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch("/book-cipher", {
+              method: "POST",
+              body: formData,
+            });
+            const data = await response.json();
+            const resultDiv = document.getElementById("book-cipher-result");
+            resultDiv.textContent = data.message;
+            console.log(data.next_part);
+          });
+      </script>
+
+      <div class="challenge">
+        <h2>Challenge 2: Vigenère Cipher</h2>
+        <p>
+          Decrypt the following cipher text using the key (was provided
+          somewhere earlier) : <code>KIKJRWXQGG</code>
+        </p>
+        <form id="vigenere-form">
+          <input
+            type="text"
+            id="vigenere-text"
+            name="cipher_text"
+            placeholder="Your answer"
+            required
+          />
+          <button type="submit">Submit</button>
+        </form>
+        <div id="vigenere-result"></div>
+      </div>
+
+      <div class="challenge">
+        <h2>Challenge 3: QR Code Puzzle</h2>
+        <p>
+          Wait this was supposed to be an image , Why is there a Base64 encoded message here ??
+        </p>
+        <textarea id="qr-base64" readonly rows="10"></textarea>
+        <script>
+          // Fetch the base64-encoded QR Code from the server
+          fetch("/qr-code")
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("qr-base64").textContent =
+                data.qr_code_base64;
+            });
+        </script>
+      </div>
+    </div>
+
+    <script src="../static/scripts/admin_panel.js"></script>
+  </body>
+</html>

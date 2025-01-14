@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Viewer</title>
+    <link rel="stylesheet" href="../static/styles/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Book Viewer</h1>
+      <div id="book-text">Loading...</div>
+      <button id="prev-btn">Previous</button>
+      <button id="next-btn">Next</button>
+    </div>
+    <script>
+      let currentPage = 1;
+
+      async function loadPage(page) {
+        const response = await fetch(`/book/${page}`);
+        const data = await response.json();
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+        document.getElementById(
+          "book-text"
+        ).textContent = `${data.page}: ${data.text}`;
+        currentPage = page;
+      }
+
+      document.getElementById("prev-btn").addEventListener("click", () => {
+        if (currentPage > 1) loadPage(currentPage - 1);
+      });
+      document.getElementById("next-btn").addEventListener("click", () => {
+        loadPage(currentPage + 1);
+      });
+
+      loadPage(currentPage); // Load the first page initially
+    </script>
+  </body>
+</html>

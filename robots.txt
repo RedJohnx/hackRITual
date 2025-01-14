@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /bella-ciao
+Hint: HESIT is the key!

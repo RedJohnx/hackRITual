@@ -4,28 +4,427 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>La Casa de Papel CTF</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles.css') }}"
-    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap");
+
+      :root {
+        --primary-red: #e50914;
+        --terminal-green: #00ff00;
+        --gold: #ffd700;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #000;
+        color: #fff;
+        font-family: "Share Tech Mono", monospace;
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+
+      .landing {
+        height: 100vh;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #matrix-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.15;
+      }
+
+      h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 4rem;
+        text-align: center;
+        color: var(--primary-red);
+        text-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .terminal {
+        width: 100%;
+        max-width: 900px;
+        background: rgba(0, 0, 0, 0.9);
+        border: 1px solid var(--terminal-green);
+        border-radius: 5px;
+        padding: 20px;
+        font-family: "Share Tech Mono", monospace;
+        position: absolute; /* Change from relative */
+        top: 50%; /* Add */
+        left: 50%; /* Add */
+        transform: translate(-50%, -50%); /* Add */
+        display: none;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        min-height: 300px;
+        overflow-y: auto;
+        max-height: 80vh; /* Or an appropriate value */
+      }
+
+      .terminal::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 25px;
+        background: rgba(0, 255, 0, 0.1);
+        border-bottom: 1px solid var(--terminal-green);
+      }
+
+      .terminal-header {
+        position: absolute;
+        top: 2px;
+        left: 10px;
+        color: var(--terminal-green);
+        font-size: 14px;
+      }
+
+      .terminal-content {
+        margin-top: 20px;
+        min-height: 300px;
+      }
+
+      .terminal-text {
+        color: var(--terminal-green);
+        margin: 0;
+        white-space: pre-wrap;
+      }
+
+      .input-line {
+        display: flex;
+        margin-top: 10px;
+      }
+
+      .prompt {
+        color: var(--terminal-green);
+        margin-right: 10px;
+      }
+
+      .cli-input {
+        background: transparent;
+        border: none;
+        color: var(--terminal-green);
+        font-family: "Share Tech Mono", monospace;
+        font-size: 16px;
+        width: 100%;
+        caret-color: var(--terminal-green);
+      }
+
+      .cli-input:focus {
+        outline: none;
+      }
+      #start-heist {
+        padding: 1rem 2rem;
+        font-family: "Share Tech Mono", monospace;
+        font-size: 1.2rem;
+        background: var(--primary-red);
+        border: 2px solid var(--gold);
+        color: #fff;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+        z-index: 2;
+        text-transform: uppercase;
+      }
+
+      #start-heist:hover {
+        background: var(--gold);
+        color: #000;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      }
+
+      .hidden {
+        display: none;
+      }
+      .terminal {
+        overflow-y: auto;
+        max-height: 80vh;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary-red) #000;
+      }
+
+      .terminal::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .terminal::-webkit-scrollbar-track {
+        background: #000;
+      }
+
+      .terminal::-webkit-scrollbar-thumb {
+        background-color: var(--primary-red);
+        border-radius: 10px;
+        border: 2px solid #000;
+      }
+
+      @keyframes glitch {
+        0% {
+          transform: translate(0) skew(0deg);
+        }
+        20% {
+          transform: translate(-2px, 2px) skew(2deg);
+        }
+        40% {
+          transform: translate(-2px, -2px) skew(-2deg);
+        }
+        60% {
+          transform: translate(2px, 2px) skew(2deg);
+        }
+        80% {
+          transform: translate(2px, -2px) skew(-2deg);
+        }
+        100% {
+          transform: translate(0) skew(0deg);
+        }
+      }
+
+      .glitch {
+        animation: glitch 0.3s infinite;
+        animation-timing-function: linear;
+      }
+
+      #enter {
+        padding: 1rem 2rem;
+        font-family: "Share Tech Mono", monospace;
+        font-size: 1.2rem;
+        background: transparent;
+        border: 2px solid var(--terminal-green);
+        color: var(--terminal-green);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+        z-index: 2;
+      }
+
+      #enter:hover {
+        background: var(--terminal-green);
+        color: #000;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+      }
+
+      .money-rain {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
   </head>
   <body>
+    <canvas id="matrix-canvas"></canvas>
+
     <div class="landing">
-      <div class="mask"></div>
-      <h1>hackRITual <br />Money Heist Chapter</h1>
-      <button id="enter">Ready to Heist?</button>
-      <div class="money-rain"></div>
+      <h1>hackRITual<br />Money Heist Chapter</h1>
+      <button id="enter">INITIALIZE SYSTEM</button>
     </div>
-    <div class="main-content hidden">
-      <main>
-        <section id="intro" class="reveal">
-          <div id="typewriter"></div>
-          <button id="start-heist" class="hidden">Start the Heist</button>
-        </section>
-      </main>
+
+    <div class="terminal">
+      <div class="terminal-header">Professor@MoneyHeist:~</div>
+      <div class="terminal-content">
+        <div class="terminal-text" id="output"></div>
+        <div class="input-line">
+          <span class="prompt">$</span>
+          <input
+            type="text"
+            class="cli-input"
+            id="cli-input"
+            autofocus
+            spellcheck="false"
+          />
+        </div>
+      </div>
+      <div id="description-section" class="hidden">
+        <p id="description-text" class="terminal-text"></p>
+        <button id="proceed-button" class="terminal-text">Proceed</button>
+      </div>
+      <div id="typewriter" class="terminal-text"></div>
+      <button id="start-heist" class="hidden terminal-text">
+        Ready to Hesit
+      </button>
     </div>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <script>
+      // Matrix rain effect
+      const canvas = document.getElementById("matrix-canvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&*";
+      const drops = [];
+      const fontSize = 15;
+      const columns = canvas.width / fontSize;
+
+      for (let i = 0; i < columns; i++) {
+        drops[i] = 1;
+      }
+
+      function drawMatrix() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#0F0";
+        ctx.font = fontSize + "px monospace";
+
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+      }
+
+      setInterval(drawMatrix, 50);
+
+      // Terminal functionality
+      const terminal = document.querySelector(".terminal");
+      const output = document.getElementById("output");
+      const input = document.getElementById("cli-input");
+
+      const messages = [
+        "INITIALIZING SECURE CONNECTION...",
+        "BYPASSING ROYAL MINT FIREWALL...",
+        "ESTABLISHING ENCRYPTED CHANNEL...",
+        "ACCESS GRANTED. WELCOME TO LA CASA DE PAPEL CTF\n",
+        "Type 'help' for available commands.",
+      ];
+
+      const commands = {
+        help: `
+            Available commands:
+            - help        : Show this help message
+            - clear       : Clear terminal
+            - start       : Begin the heist
+            - status      : Check system status
+            - scan        : Scan for vulnerabilities
+            - connect     : Connect to the Royal Mint network`,
+
+        clear: () => {
+          output.textContent = "";
+          return "";
+        },
+
+        start: () => {
+          const terminal = document.querySelector(".terminal");
+
+          // Fade out effect using GSAP
+          gsap.to(terminal, {
+            opacity: 0,
+            duration: 1,
+            onComplete: () => {
+              window.location.href = "/secret_cameras";
+            },
+          });
+
+          return "Loading instructions...";
+        },
+
+        status:
+          "System Status:\n✓ Connection: Secure\n✓ Encryption: Active\n✓ Firewall: Bypassed\n✓ Location: Madrid, Spain",
+
+        scan: "Scanning for vulnerabilities...\n[■■■■■■■■■■] 100%\nVulnerabilities detected: 3\n- Legacy authentication system\n- Outdated CCTV firmware\n- Weak access control",
+
+        connect:
+          "Establishing connection to Royal Mint systems...\nAccess granted. Welcome, Professor.",
+      };
+
+      document.getElementById("enter").addEventListener("click", () => {
+        gsap.to(".landing", {
+          opacity: 0,
+          duration: 1,
+          onComplete: () => {
+            document.querySelector(".landing").style.display = "none";
+            terminal.style.display = "block";
+            gsap.from(terminal, {
+              opacity: 0,
+              y: 50,
+              duration: 1,
+            });
+            typeNextMessage(0);
+          },
+        });
+      });
+
+      function typeNextMessage(messageIndex, charIndex = 0) {
+        if (messageIndex < messages.length) {
+          if (charIndex === 0) {
+            output.textContent += "\n";
+          }
+
+          if (charIndex < messages[messageIndex].length) {
+            output.textContent += messages[messageIndex][charIndex];
+            setTimeout(() => {
+              typeNextMessage(messageIndex, charIndex + 1);
+            }, 30);
+          } else {
+            setTimeout(() => {
+              typeNextMessage(messageIndex + 1);
+            }, 500);
+          }
+        }
+      }
+
+      input.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          const command = input.value.toLowerCase();
+          output.textContent += `\n$ ${input.value}\n`;
+
+          if (commands[command]) {
+            if (typeof commands[command] === "function") {
+              output.textContent += commands[command]();
+            } else {
+              output.textContent += commands[command];
+            }
+          } else {
+            output.textContent +=
+              'Command not recognized. Type "help" for available commands.';
+          }
+
+          output.textContent += "\n";
+          input.value = "";
+
+          terminal.scrollTop = terminal.scrollHeight;
+        }
+      });
+
+      // Keep input focused
+      document.addEventListener("click", () => {
+        if (terminal.style.display !== "none") {
+          input.focus();
+        }
+      });
+    </script>
   </body>
 </html>

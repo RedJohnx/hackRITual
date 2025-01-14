@@ -3,12 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const solveButton = document.getElementById("solve-equation-btn");
   const answerInput = document.getElementById("equation-answer");
 
-  // Camera click event
-  cameras.forEach((camera) => {
-    camera.addEventListener("click", () => {
-      alert("You are viewing Camera 3. Look closer for hidden details.");
-    });
-  });
+  const notificationArea = document.getElementById("notification-area");
+  const notificationMessage = document.getElementById("notification-message");
+  const nextChallengeBtn = document.getElementById("next-challenge-btn");
+
 
   // Solve equation event
   solveButton.addEventListener("click", async () => {
@@ -25,13 +23,28 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const result = await response.json();
-      alert(result.message);
+      showNotification(result.message);
 
       if (result.success) {
-        // Redirect to the next challenge
+        // Show "Next Challenge" button and store the URL to the next challenge
+        nextChallengeBtn.style.display = "block"; // Show the button
+        nextChallengeBtn.onclick = () => {
+          window.location.href = result.next_challenge_url; // Redirect to the next challenge
+        };
       }
     } catch (error) {
-      alert("Error checking your answer. Please try again.");
+      showNotification("Error checking your answer. Please try again.");
     }
   });
+
+  // Show the notification next to Camera 4
+  function showNotification(message) {
+    notificationMessage.textContent = message;
+    notificationArea.style.display = "block";
+
+    // Hide the notification after 5 seconds
+    setTimeout(() => {
+      notificationArea.style.display = "none";
+    }, 5000); // Hide after 5 seconds
+  }
 });
